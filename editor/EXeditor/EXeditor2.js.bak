@@ -1,0 +1,879 @@
+(function($){
+	$.fn.extend({ 
+		EXeditor: function(option) {
+			// 사용자 브라우저를 검사 IE || nonIE
+			var agent = new Object();
+			agent.getAgent = function() {
+				var ua = window.navigator.userAgent;
+				var RegEx_msie = /MSIE/i;
+				var RegEx_Trident = /Trident/i;
+				if (RegEx_msie.exec(ua)) {
+					agent.browser = "MSIE";
+					agent.reg = /MSIE ([\d]+)./i
+				} else if (RegEx_Trident.exec(ua)) {
+					agent.browser = "MSIE";
+					agent.reg = /rv:([\d]+)./i
+				} else {
+					agent.browser = 'nonIE';
+					agent.reg = false;
+				}
+				if (agent.reg) {
+					var v = agent.reg.exec(ua);
+					agent.version = v[1];
+				}
+			}
+			agent.getAgent();
+			// 선택영역 받기
+			var getSelect = function() {
+				var selection = win.getSelection();
+				if (selection.isCollapsed) {
+					return false;
+				}
+				//console.log(selection);
+				return selection;
+			}
+			// 크로스 브라우징
+			var insertHtmlCross = function(result, selection) {
+					if(agent.browser == 'MSIE') {
+						if (agent.version < 11 ) {
+							var editSelect = doc.selection.createRange();
+							editSelect.select();
+							editSelect.pasteHTML(result);
+						} else {
+							var editSelect = selection.getRangeAt(0);
+							editSelect.deleteContents(); 
+							editSelect.insertNode(editSelect.createContextualFragment(result));
+						}
+					} else {
+						doc.execCommand("inserthtml",false,result);
+					}
+			}
+			var Base64 = {
+				// private property
+				_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+				// public method for encoding
+				encode : function (input) {
+					var output = "";
+					var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+					var i = 0;
+					input = Base64._utf8_encode(input);
+					while (i < input.length) {
+						chr1 = input.charCodeAt(i++);
+						chr2 = input.charCodeAt(i++);
+						chr3 = input.charCodeAt(i++);
+						enc1 = chr1 >> 2;
+						enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+						enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+						enc4 = chr3 & 63;
+						if (isNaN(chr2)) {
+							enc3 = enc4 = 64;
+						} else if (isNaN(chr3)) {
+							enc4 = 64;
+						}
+						output = output +
+						this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+						this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+					}
+					return output;
+				},
+				// public method for decoding
+				decode : function (input) {
+					var output = "";
+					var chr1, chr2, chr3;
+					var enc1, enc2, enc3, enc4;
+					var i = 0;
+					input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+					while (i < input.length) {
+						enc1 = this._keyStr.indexOf(input.charAt(i++));
+						enc2 = this._keyStr.indexOf(input.charAt(i++));
+						enc3 = this._keyStr.indexOf(input.charAt(i++));
+						enc4 = this._keyStr.indexOf(input.charAt(i++));
+						chr1 = (enc1 << 2) | (enc2 >> 4);
+						chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+						chr3 = ((enc3 & 3) << 6) | enc4;
+						output = output + String.fromCharCode(chr1);
+						if (enc3 != 64) {
+							output = output + String.fromCharCode(chr2);
+						}
+						if (enc4 != 64) {
+							output = output + String.fromCharCode(chr3);
+						}
+					}
+					output = Base64._utf8_decode(output);
+					return output;
+				},
+				
+				// private method for UTF-8 encoding
+				_utf8_encode : function (string) {
+					string = string.replace(/\r\n/g,"\n");
+					var utftext = "";
+					for (var n = 0; n < string.length; n++) {
+						var c = string.charCodeAt(n);
+						if (c < 128) {
+							utftext += String.fromCharCode(c);
+						} else if((c > 127) && (c < 2048)) {
+							utftext += String.fromCharCode((c >> 6) | 192);
+							utftext += String.fromCharCode((c & 63) | 128);
+						} else {
+							utftext += String.fromCharCode((c >> 12) | 224);
+							utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+							utftext += String.fromCharCode((c & 63) | 128);
+						}
+					}
+					return utftext;
+				},
+				
+				// private method for UTF-8 decoding
+				_utf8_decode : function (utftext) {
+					var string = "";
+					var i = 0;
+					var c = c1 = c2 = 0;
+					while ( i < utftext.length ) {
+						c = utftext.charCodeAt(i);
+						if (c < 128) {
+							string += String.fromCharCode(c);
+							i++;
+						} else if((c > 191) && (c < 224)) {
+							c2 = utftext.charCodeAt(i+1);
+							string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+							i += 2;
+						} else {
+							c2 = utftext.charCodeAt(i+1);
+							c3 = utftext.charCodeAt(i+2);
+							string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+							i += 3;
+						}
+					}
+					return string;
+				}
+			}
+			
+			var regExReplace = new Object();
+			regExReplace.imgToembed = /<img.+class="(InsertYoutube|InsertFlash)".+data-code="(.+)".+>/ig
+			
+			if (typeof(option) == 'string') {
+				switch (option) {
+					case 'showData' :
+						var win = document.querySelector('#eWindow');
+						var doc = win.contentWindow.document
+						//$.each($(doc).find('img.InsertYoutube, img.InsertFlash'), function(idx,el){
+						//	$(el).replaceWith((Base64.decode($(el).attr('data-code'))));
+						//});
+						var text = doc.body.innerHTML;
+						
+						var reg_match = text.match(regExReplace.imgToembed);
+						console.log(reg_match);
+						
+						var textarea = $('.wigywig').find('textarea');
+						textarea.html(text);
+						return text;
+						break;
+					default :
+						return this;
+						break;
+				}
+			}
+			
+			// 기본설정값
+			var defaults = {
+				upload : '',
+				textarea : {'obj':'', 'height':'0', 'width':'0'},
+				menu : [
+						'undo','redo','*',
+						'fontFamily','fontSize','fontColor','backColor','*',
+						'bold','italic','subscript','superscript','underline','-',
+						'leftAlign','centerAlign', 'rightAlign','*',
+						'InsertUnorderedList','insertOrderedList', 'insertTable','*',
+						'createLink','unlink','*',
+						'InsertImg','InsertFlash','InsertYoutube'
+						],
+				menuTitle : [
+						'실행취소','다시실행','*',
+						'글꼴선택','글씨크기','전경색','배경색','*',
+						'굵게','이탤릭','아랫첨자','윗첨자','밑줄','-',
+						'왼쪽정렬','가운데정렬','오른쪽정렬','*',
+						'목록','번호목록','Table 삽입','*',
+						'링크생성', '링크해제','*',
+						'이미지삽입','플래쉬연결','유투브동영상연결'
+						],
+				fontFamily : {'굴림':'Gulim', '돋움':'Dotum', '바탕':'Batang','궁서':'Gungsuh'},
+				fontSize : ['10', '11', '12', '14', '16', '20' , '24', '30', '36', '48']
+			};
+			
+			var Img = new Object();
+			Img.blank = "data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==";
+			Img.flash = "data:image/gif;base64,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";
+			Img.youtube = "data:image/gif;base64,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";
+			
+			var opt = $.extend(defaults, option);
+			console.log(opt);
+			opt.textarea.obj = $(this).clone();
+			
+			/* wigywig div 생성 및 iframe 생성 */
+			opt.frame = new Object();
+			opt.frame.div = $('<div></div>').addClass('wigywig');
+			$(this).before(opt.frame.div);
+			opt.frame.menu = $('<ul></ul>').addClass('eMenu').appendTo(opt.frame.div);
+			opt.frame.iframe = $('<iframe></iframe>').attr({'id':'eWindow'}).css({width: $(this).width(), height: $(this).height(), border:'none'}).appendTo(opt.frame.div);
+			opt.frame.iframe.append('<body></body>');
+			
+			opt.textarea.obj.appendTo(opt.frame.div).css('display','');
+			$(this).remove();
+			const SHIFT =16 , ENTER=13;
+			var shift_on;
+			var win , doc;
+			window.addEventListener("load", function() {
+				win = document.querySelector('#eWindow').contentWindow;
+				doc = win.document;
+				$(doc).find('body').attr('contenteditable','true');
+			
+				$(doc).on('keypress', function(e){
+					if(e.keyCode==ENTER) {
+						if (shift_on) {
+							//console.log('SHIFT - ENTER');
+						} else {
+							// br 삽입
+							console.log('그냥 ENTER');
+						}
+					}
+				}).on('keydown', function(e){
+					if (e.keyCode == SHIFT) {
+						shift_on = true;
+					}
+				}).on('keyup', function(e){
+					if (e.keyCode == SHIFT) {
+						shift_on = false;
+					}
+				});
+				
+				$(doc).delegate('table', 'contextmenu',function(e) {
+					e.preventDefault();
+					var me = $(this);
+					var target = $('.wigywig');
+					target.find('.popupMenu').remove();
+					console.log(e)
+					var div = $('<div></div>').addClass('popupMenu').css({
+						'position': 'absolute',
+						'left' : e.clientX,
+						'background' : '#FFF',
+						'padding' : '8',
+						'border' : '1px solid #dedede',
+						'border-radius' : '4px',
+						'box-shadow' : '2px 2px #777'}).appendTo(target);
+					var a = $('<button></button>').css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'padding':'1px 4px', 'cursor' : 'pointer'}).text('테이블삭제').appendTo(div).click(function(e) {
+						e.preventDefault();
+						me.remove();
+						target.find('.popupMenu').remove();
+					});
+					div.css({'top' : e.clientY + div.height()});
+				}).delegate('body','click', function(e){
+					var target = $('.wigywig');
+					target.find('.popupMenu').remove();
+				}).delegate('img.InsertYoutube','contextmenu', function(e){
+					e.preventDefault();
+					var me = $(this);
+					var target = $('.wigywig');
+					target.find('.popupMenu').remove();
+					console.log(e)
+					var div = $('<div></div>').addClass('popupMenu').css({
+						'position': 'absolute',
+						'left' : e.clientX,
+						'background' : '#FFF',
+						'padding' : '8',
+						'border' : '1px solid #dedede',
+						'border-radius' : '4px',
+						'box-shadow' : '2px 2px #777'}).appendTo(target);
+					var a = $('<button></button>').css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'padding':'1px 4px', 'cursor' : 'pointer'}).text('삭제').appendTo(div).click(function(e) {
+						e.preventDefault();
+						me.remove();
+						target.find('.popupMenu').remove();
+					});
+					div.css({'top' : e.clientY + div.height()});
+				});
+			}, false);
+			
+			//소스정보를 프레임으로 옴긴다.
+			var sourceToFrame = function() {
+				var text = opt.textarea.obj.val();
+				
+			}
+			sourceToFrame();
+			
+			/* 메뉴 생성 */
+			var createMenu = function(menu, menuTitle, target) {
+				var menu_length = menu.length;
+				for (var i=0; i<menu_length; i++) {
+					if (i==0 || menu[i] == '*') {
+						var li = $('<li></li>').appendTo(target);
+						if (menu[i] == '*') {
+							continue;
+						}
+					}
+					if (menu[i] == '-') {
+						var span = $('<span></span>').addClass('space').appendTo(li);
+					} else {
+						switch (menu[i]) {
+							case 'fontFamily' :
+								var divition = menu[i];
+								var sel = $('<select></select>').attr('data-command',menu[i]).appendTo(li);
+								var op = $('<option></option>').val('').text('글꼴').appendTo(sel);
+								for (var key in opt[divition]) {
+									var op2 = $('<option></option>').val(opt[divition][key]).text(key).appendTo(sel);
+								}
+								break;
+								
+							case 'fontSize' :
+								var sel = $('<select></select>').attr('data-command',menu[i]).appendTo(li);
+								var len = opt.fontSize.length
+								var op = $('<option></option>').val('').text('크기').appendTo(sel);
+								for (var j=0; j<len; j++ ) {
+									var op2 = $('<option></option>').val(opt.fontSize[j]).text(opt.fontSize[j]+'px').appendTo(sel);
+								}
+								break;
+								
+							default :
+								var a = $('<button></button>').attr({'data-command':menu[i], 'title':menuTitle[i]}).addClass('hover').appendTo(li);
+								var text = $('<span></span>').appendTo(a);
+								break;
+						}
+					}
+				}
+			}
+			createMenu(opt.menu, opt.menuTitle, opt.frame.menu);
+			
+			// 컬러피커 생성
+			var ColorPicker = new Object();
+			ColorPicker.preset = ['ffffff','000000','ff0000','ffff00','00ff00','0000ff']
+			ColorPicker.define = new Object();
+			ColorPicker.opend = new Object();
+			ColorPicker.create = function(target) {
+				var picker = $('<div></div>').css({
+					'position': 'absolute',
+					'width' : '200px',
+					'left' : $(target).context.offsetLeft,
+					'top' : $(target).context.offsetHeight + $(target).context.offsetTop,
+					'background' : '#FFF',
+					'padding' : '8',
+					'border' : '1px solid #dedede',
+					'border-radius' : '4px',
+					'box-shadow' : '2px 2px #777'
+				}).addClass($(target).attr('data-command')+'_picker');
+				$(target).after(picker);
+				var preset_length = ColorPicker.preset.length;
+				var childName = $(target).attr('data-command') + '_child';
+				for (var i=0; i< preset_length; i++) {
+					var color  = '#' + ColorPicker.preset[i];
+					var a = $('<button></button>').css({
+						'width' : '9', 
+						'height' : '9', 
+						'display' : 'block', 
+						'border' : '1px solid #000',
+						'float' : 'left',
+						'margin' : '4px',
+						'background-color' : color,
+						'cursor' : 'pointer'
+					}).attr({'data-command':childName,'data-value': ColorPicker.preset[i]}).appendTo(picker);
+				}
+				
+				var inset = $('<div></div>').css({
+					'clear' : 'both',
+					'font-size' : '11px',
+					'font-family' : 'Dotum'
+				}).addClass('inputColorDiv').appendTo(picker);
+				var finish = $(target).attr('data-command') + '_finish';
+				var inset_span = $('<span></span>').text('직접입력 : #').appendTo(inset);
+				var inset_input = $('<input>').attr({'type':'text'}).css({'font-size':'11px', 'border': '1px solid #ddd', 'padding':'1px', 'width':'50px', 'height':'13px;'}).appendTo(inset).keyup(function(e) {
+					var val = $(this).val();
+					val = val.replace(/[^0-9^a-f]/i,'');
+					val = val.match(/([0-9a-f]{0,6})/i)
+					$(this).val(val[1]);
+				});;
+				var inset_a = $('<button></button>').attr({'data-command': finish}).css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'margin-left':'4px','padding':'1px 4px', 'cursor' : 'pointer'}).text('완료').appendTo(inset);
+				
+				ColorPicker.define[$(target).attr('data-command')] = true;
+			}
+			// 컬러피커 오픈
+			ColorPicker.openForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_picker';
+				ColorPicker.opend[$(el).attr('data-command')] = true;
+				$(target).css('display','block').mouseleave(function(e) {
+					ColorPicker.opend[$(el).attr('data-command')] = false;
+					$(this).css('display','none');
+				});
+			}
+			// 컬러피커 클로즈
+			ColorPicker.closeForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_picker';
+				$(target).css('display','none')
+				ColorPicker.opend[$(el).attr('data-command')] = false;
+			}
+			
+			// 테이블 폼 생성
+			var TableForm = new Object();
+			TableForm.define = false;
+			TableForm.opend = false;
+			TableForm.create = function(target) {
+				var table = $('<div></div>').css({
+					'position': 'absolute',
+					'width' : '280px',
+					'left' : $(target).context.offsetLeft-140,
+					'top' : $(target).context.offsetHeight + $(target).context.offsetTop,
+					'background' : '#FFF',
+					'padding' : '8',
+					'border' : '1px solid #dedede',
+					'border-radius' : '4px',
+					'box-shadow' : '2px 2px #777'
+				}).addClass($(target).attr('data-command')+'_form');
+				$(target).after(table);
+				var div1 = $('<div></div>').html('폭: <input id="EXedit_table_width" value="100" style="font-size:11px; border:1px solid #ddd, padding:1px; width:40px;" />%').css('float','left').appendTo(table);
+				var div2 = $('<div></div>').html('가로: <input id="EXedit_table_col" value="4" style="font-size:11px; border:1px solid #ddd, padding:1px; width:40px;" />').css({'float':'left', 'margin-left':'10px'}).appendTo(table);
+				var div3 = $('<div></div>').html('세로: <input id="EXedit_table_row" value="3" style="font-size:11px; border:1px solid #ddd, padding:1px; width:40px;" />').css({'float':'left', 'margin-left':'10px'}).appendTo(table);
+				var finish = $(target).attr('data-command') + '_finish';
+				var button = $('<button></button>').attr({'data-command': finish}).css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'margin-left':'4px','padding':'1px 4px', 'cursor' : 'pointer'}).text('완료').appendTo(table);
+				$('#EXedit_table_width').keyup(function(e){
+					var val = $(this).val();
+					val = val.replace(/[^\d]/,'');
+					val = val.match(/(^100|[1-9]?[0-9])/);
+					$(this).val(val[0]);
+				});
+				TableForm.define = true;
+			}
+			// 테이블 폼 오픈
+			TableForm.openForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				TableForm.opend = true;
+				$(target).css('display','block').mouseleave(function(e) {
+					TableForm.opend = false;
+					$(this).css('display','none');
+				});
+			}
+			// 테이블 폼 클로즈
+			TableForm.closeForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				$(target).css('display','none')
+				TableForm.opend = false;
+			}
+			// 링크폼 생성
+			var LinkForm = new Object();
+			LinkForm.define = false;
+			LinkForm.opend = false;
+			LinkForm.create = function(target) {
+				var table = $('<div></div>').css({
+					'position': 'absolute',
+					'width' : '280px',
+					'left' : $(target).context.offsetLeft-140,
+					'top' : $(target).context.offsetHeight + $(target).context.offsetTop,
+					'background' : '#FFF',
+					'padding' : '8',
+					'border' : '1px solid #dedede',
+					'border-radius' : '4px',
+					'box-shadow' : '2px 2px #777'
+				}).addClass($(target).attr('data-command')+'_form').text('url : ');
+				$(target).after(table);
+				var input = $('<input>').attr({'type':'text', 'value':'http://'}).css({'font-size':'11px', 'border': '1px solid #ddd', 'padding':'1px', 'width':'213px', 'height':'13px;'}).appendTo(table);
+				var finish = $(target).attr('data-command') + '_finish';
+				var button = $('<button></button>').attr({'data-command': finish}).css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'margin-left':'4px','padding':'1px 4px', 'cursor' : 'pointer'}).text('완료').appendTo(table);
+				LinkForm.define = true;
+			}
+			
+			// 링크 폼 오픈
+			LinkForm.openForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				LinkForm.opend = true;
+				$(target).css('display','block').mouseleave(function(e) {
+					LinkForm.opend = false;
+					$(this).css('display','none');
+				});
+			}
+			// 링크 폼 클로즈
+			LinkForm.closeForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				$(target).css('display','none')
+				LinkForm.opend = false;
+			}
+			// 플래쉬 폼 생성
+			var SwfForm = new Object();
+			SwfForm.define = new Object();
+			SwfForm.opend = new Object();
+			SwfForm.create = function(target) {
+				var parent_name = $(target).attr('data-command');
+				var table = $('<div></div>').css({
+					'position': 'absolute',
+					'width' : '254px',
+					'left' : $(target).context.offsetLeft-127,
+					'top' : $(target).context.offsetHeight + $(target).context.offsetTop,
+					'background' : '#FFF',
+					'padding' : '8',
+					'border' : '1px solid #dedede',
+					'border-radius' : '4px',
+					'box-shadow' : '2px 2px #777'
+				}).addClass(parent_name+'_form');
+				$(target).after(table);
+				
+				input_id = [
+					'ExEdit_SwfForm_'+parent_name+'_url',
+					'ExEdit_SwfForm_'+parent_name+'_width',
+					'ExEdit_SwfForm_'+parent_name+'_height',
+				];
+				var title_idx = opt.menu.indexOf(parent_name);
+				var div1 = $('<div></div>').text(opt.menuTitle[title_idx]).css('margin-bottom','4px').appendTo(table);
+				var label1 = $('<label></label>').css({'float':'left'}).text('url :').appendTo(table);
+				var input1 = $('<input>').attr({'id':input_id[0],'type':'text', 'value':'http://'}).css({'font-size':'11px', 'border': '1px solid #ddd', 'padding':'1px', 'width':'223px', 'height':'13px;'}).appendTo(label1);
+				var div_clear = $('<div></div>').css({'clear':'both','height':'4px'}).appendTo(table);
+				var label2 = $('<label></label>').css('float','left').text('Width :').appendTo(table);
+				var input2 = $('<input>').attr({'id':input_id[1],'type':'text'}).css({'font-size':'11px', 'border': '1px solid #ddd', 'padding':'1px', 'width':'40px', 'height':'13px;'}).appendTo(label2);
+				var span_px = $('<span></span>').text('px').css('margin-right','8px').appendTo(label2);
+				var label3 = $('<label></label>').css('float','left').text('Height :').appendTo(table);
+				var input3 = $('<input>').attr({'id':input_id[2],'type':'text'}).css({'font-size':'11px', 'border': '1px solid #ddd', 'padding':'1px', 'width':'40px', 'height':'13px;'}).appendTo(label3);
+				span_px.clone().appendTo(label3);
+				var finish = parent_name + '_finish';
+				var button = $('<button></button>').attr({'data-command': finish}).css({'background-color':'#f0f0f0','border': '1px solid #ddd', 'margin-left':'4px','padding':'1px 4px', 'cursor' : 'pointer'}).text('완료').appendTo(table);
+				SwfForm.define[$(target).attr('data-command')] = true;
+			}
+			// 플래쉬 폼 오픈
+			SwfForm.openForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				SwfForm.opend[$(el).attr('data-command')] = true;
+				$(target).css('display','block').mouseleave(function(e) {
+					SwfForm.opend[$(el).attr('data-command')] = false;
+					$(this).css('display','none');
+				});
+			}
+			// 플래쉬 폼 클로즈
+			SwfForm.closeForm = function(el) {
+				var target = '.' + $(el).attr('data-command') +'_form';
+				$(target).css('display','none')
+				SwfForm.opend[$(el).attr('data-command')] = false;
+			}
+			
+		// 현제 선택 노드의 부모노드
+			var getParentNode = function () {
+				var selection = win.getSelection();
+				var parent = $(selection.anchorNode.parentNode);
+				var node = new Object();
+				 // 페어런트의 노드값이 body라면 div를 생성 후 돌려준다
+				if (parent[0].nodeName.match(/(body|td)/i)) {
+					var html = parent.html();
+					parent.html('');
+					node.parent = $('<div></div>').html(html).appendTo(parent);
+					node.type = 'block';
+				} else if (parent[0].nodeName.match(/(div|li|p)/i)) {
+					node.parent = parent; 
+					node.type = 'block';
+				} else {
+					node.parent = parent; 
+					node.type = 'inline';
+				}
+				return node;
+			}
+			/* 메뉴클릭에 따른 동작함수 정의*/
+			var exec_command = function(e) {
+				win.focus();
+				var selection = getSelect();
+				var node = getParentNode();
+				var cmd = $(e).attr('data-command');
+				switch (cmd) {
+					case 'fontFamily' :
+						var val = $(e).val();
+						if (selection) {
+							var text = selection.toString();
+							var code = $('<span></span>').css('font-family' , val).text(text);
+							insertHtmlCross(code[0].outerHTML, selection);
+						} else {
+							node.parent.css('font-family' , val);
+						}
+						break;
+					case 'fontSize' :
+						var px = $(e).val() + 'px';
+						if (selection) {
+							var text = selection.toString();
+							var code = $('<span></span>').css('font-size' , px).text(text);
+							insertHtmlCross(code[0].outerHTML, selection);
+						} else {
+							node.parent.css('font-size' , px);
+						}
+						break;
+					case 'fontColor_finish' :
+						var val ='#' + $(e).attr('data-value');
+						if (selection) {
+							var text = selection.toString();
+							var code = $('<span></span>').css('color', val).text(text);
+							insertHtmlCross(code[0].outerHTML, selection);
+						} else {
+							node.parent.css('color' , val);
+						}
+						break;
+					case 'backColor_finish':
+						var val ='#' + $(e).attr('data-value');
+						if (selection) {
+							var text = selection.toString();
+							var code = $('<span></span>').css('background-color', val).text(text);
+							insertHtmlCross(code[0].outerHTML, selection);
+						} else {
+							node.parent.css('background-color' , val);
+						}
+						break;
+					case 'leftAlign':
+					case 'centerAlign':
+					case 'rightAlign':
+						var align = cmd.replace('Align','');
+						if (node.type == 'block') {
+							node.parent.css('text-align', align);
+						} else {
+							node.parent.closest('div').css('text-align', align);
+						}
+						break;
+					case 'insertTable_finish' :
+						var width = $('#EXedit_table_width').val();
+						var col = $('#EXedit_table_col').val();
+						var row = $('#EXedit_table_row').val();
+						width = width > 0 ? width : 100;
+						width = width+'%';
+						col = col > 0 ? col : 4;
+						row = row > 0 ? row : 3;
+						var table = $('<table></table>').css({'border-collapse':'collapse','width': width});
+						for (var r=0; r<row; r++) {
+							var tr = $('<tr></tr>').appendTo(table);
+							for (var c=0; c<col; c++) {
+								var td = $('<td></td>').css({'border':'1px solid #cdcdcd', 'height' : '24px'}).text(' ').appendTo(tr);
+							}
+						}
+						node.parent.append(table);
+						break;
+						
+					case 'createLink_finish':
+						if (selection) {
+							var val = $(e).closest('div').find('input').val();
+							if (val.match(/^http:\/\/(www.)?.+\..*/i)) {
+								doc.execCommand('createLink', false, val);
+							}
+						}
+						break;
+					case 'unlink':
+						if (selection) {
+							doc.execCommand(cmd, false, null);
+						} else {
+							if(node.parent[0].nodeName.match(/a/i)) {
+								var html = node.parent.html();
+								node.parent.replaceWith(html);
+							}
+						}
+						break;
+						
+					case 'InsertYoutube_finish' :
+					case 'InsertFlash_finish' :
+						var parent_name = cmd.split('_')[0];
+						var url = $('#ExEdit_SwfForm_'+parent_name+'_url').val();
+						var width = $('#ExEdit_SwfForm_'+parent_name+'_width').val();
+						var height = $('#ExEdit_SwfForm_'+parent_name+'_height').val();
+						
+						switch (parent_name) {
+							case 'InsertFlash':
+								var RegEx = /^http:\/\/(www.)?.+\..*\.swf$/i;
+								break;
+							case 'InsertYoutube':
+								var RegEx = /(^http:\/\/youtu.be\/(.+)$|^http:\/\/www.youtube.com\/watch\?v\=(.+)$|^http:\/\/www.youtube.com\/v\/.+$)/i;
+								break;
+							default :
+								console.log('ERROR : '+ parent_name);
+								return;
+								break;
+						}
+						var reg_match;
+						if (reg_match = url.match(RegEx)) {
+							var img = $('<img />').attr({'src':Img.blank,'alt': parent_name}).addClass(parent_name);
+							switch (parent_name) {
+								case 'InsertFlash' :
+									var code = $('<embed></embed>').attr({
+										'pluginspage':'http://www.macromedia.com/go/getflashplayer',
+										'quality': 'high',
+										'src' : url,
+										'type' : 'application/x-shockwave-flash'
+									});
+									img.css({'background-image':'url("'+ Img.flash +'")', 'background-repeat' : 'no-repeat', 'background-position' : 'center center'});
+									break;
+								case 'InsertYoutube':
+									pattern = "http://www.youtube.com/v/";
+									if (reg_match[2]) {
+										url = pattern + reg_match[2];
+									} else if (reg_match[3]) {
+										url = pattern + reg_match[3];
+									}
+									var code = $('<embed></embed>').attr({
+										'src' : url,
+										'type' : 'application/x-shockwave-flash',
+										'allowscriptaccess' : 'always',
+										'allowfullscreen' :'true'
+									});
+									img.css({'background-image':'url("'+ Img.youtube +'")', 'background-repeat' : 'no-repeat', 'background-position' : 'center center'});
+									break;
+							}
+							if (width > 0) {
+								code.attr('width',width);
+								img.attr('width',width);
+							} else {
+								img.attr('width','100');
+							}
+							if (height > 0) {
+								code.attr('height', height);
+								img.attr('height',height);
+							} else {
+								img.attr('height','75');
+							}
+							img.css('border','1px solid #ccc');
+							img.attr('data-code',Base64.encode(code[0].outerHTML));
+							node.parent.append(img);
+						}
+						break;
+						
+					case 'insertOrderedList':
+					case 'InsertUnorderedList':
+						if (selection) {
+							doc.execCommand(cmd, false, null);
+						} else {
+							switch (cmd) {
+								case 'insertOrderedList':
+									var list = $('<ol></ol>');
+									break;
+								case 'InsertUnorderedList' :
+									var list = $('<ul></ul>');
+									break;
+							}
+							var li = $('<li></li>').appendTo(list);
+							list.appendTo(node.parent);
+							li.focus();
+						}
+						break;
+						
+					case 'redo':
+					case 'undo':
+						doc.execCommand(cmd, false, null);
+						break;
+					
+					case 'underline' :
+					case 'superscript':
+					case 'subscript':
+					case 'italic':
+					case 'bold' :
+						if (selection) {
+							doc.execCommand(cmd, false, null);
+						} else {
+							switch(cmd) {
+								case 'underline':
+									if (node.parent.css('text-decoration') == cmd) {
+										node.parent.css('text-decoration','none');
+									} else {
+										node.parent.css('text-decoration','underline');
+									}
+									break;
+								case 'italic':
+									if (node.parent.css('font-style') == cmd) {
+										node.parent.css('font-style','normal');
+									} else {
+										node.parent.css('font-style','italic');
+									}
+									break;
+								case 'bold':
+									if (node.parent.css('font-weight') == 'bold' || node.parent.css('font-weight') == 700) {
+										node.parent.css('font-weight','normal');
+									} else {
+										node.parent.css('font-weight','bold');
+									}
+									break;
+							}
+						}
+						break;
+					default :
+						console.log('ERROR : 미등록 명령 ('+ cmd +')');
+						break;
+				}
+			}
+			
+			return opt.textarea.obj.each(function() {
+				//console.log(this);
+				/* 폼서밋시 textarea 에 폼값을 넘겨준다*/
+				var form = $(this).closest('form');
+				form.submit(function(e) {
+					
+					
+					opt.textarea.obj.html(doc.body.innerHTML);
+				});
+				
+				/* 멘뉴 클릭 핸들러 */
+				opt.frame.menu.delegate('button','click', function(e) {
+					e.preventDefault();
+					switch ($(this).attr('data-command')) {
+						case 'backColor':
+						case 'fontColor':
+							if (!ColorPicker.define[$(this).attr('data-command')]) {
+								ColorPicker.create(this);
+							}
+							if (ColorPicker.opend[$(this).attr('data-command')]) {
+								ColorPicker.closeForm(this);
+							} else {
+								ColorPicker.openForm(this);
+							}
+							break;
+						case 'backColor_child':
+						case 'fontColor_child' :
+							$(this).closest('div').find('input').val($(this).attr('data-value'));
+							$(this).closest('div').find('.inputColorDiv button').click();
+							break;
+						case 'backColor_finish':
+						case 'fontColor_finish' :
+							var value = $(this).prev('input').val();
+							$(this).attr('data-value' ,value);
+							exec_command(this);
+							break;
+						case 'insertTable' :
+							if (!TableForm.define) {
+								TableForm.create(this);
+							}
+							if (TableForm.opend) {
+								TableForm.closeForm(this);
+							} else {
+								TableForm.openForm (this);
+							}
+							break;
+						case 'createLink':
+							if (!LinkForm.define) {
+								LinkForm.create(this);
+							}
+							if (LinkForm.opend) {
+								LinkForm.closeForm(this);
+							} else {
+								LinkForm.openForm(this);
+							}
+							break;
+						case 'InsertYoutube':
+						case 'InsertFlash':
+							if (!SwfForm.define[$(this).attr('data-command')]) {
+								SwfForm.create(this);
+							}
+							if (SwfForm.opend[$(this).attr('data-command')]) {
+								SwfForm.closeForm(this);
+							} else {
+								SwfForm.openForm(this);
+							}
+							break; 
+						default :
+							exec_command(this);
+							break;
+					}
+				});
+				// 버튼 오버 아웃 이벤트
+				opt.frame.menu.delegate('.hover', 'mouseenter', function(e) {
+					$(this).css('background' ,'radial-gradient(ellipse at center, #fcfcfc 54%,#a5a5a5 100%)');
+				});
+				opt.frame.menu.delegate('.hover', 'mouseleave', function(e) {
+					$(this).css('background' ,'#fcfcfc');
+				});
+				// 셀렉트 선택 핸들러
+				opt.frame.menu.find('select').change(function(e) {
+					exec_command(this);
+				});
+				
+			});
+		}
+	});
+})(jQuery);

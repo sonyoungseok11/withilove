@@ -1,0 +1,59 @@
+/* CSS Document */
+textarea {width:100%; height:200px;}
+.wigywig {border:1px solid #CCC; position:relative;}
+.wigywig .EX_Editor{overflow:auto;}
+.wigywig .wigywig_bottom {position:relative; width:100%; bottom:0px; background: linear-gradient(to bottom, #e5e5e5 0%,#fcfcfc 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e5e5', endColorstr='#fcfcfc',GradientType=0 ); height:20px; overflow:hidden;}
+.wigywig .wigywig_bottom .resizeHandler {position:absolute; right:0; bottom:0px; background:url(resize.gif); height:20px; width:20px; cursor:s-resize;}
+.wigywig .wigywig_bottom a{display:inline-block; height:18px; line-height:18px; border:1px solid #e5e5e5; padding:0px 5px;}
+.wigywig .wigywig_bottom a.selected {background:radial-gradient(ellipse at center, #fcfcfc 54%,#a5a5a5 100%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#e5e5e5',GradientType=1 );}
+.wigywig .eMenu {position:relative; background: linear-gradient(to bottom, #fcfcfc 0%,#e5e5e5 100%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#e5e5e5',GradientType=0 );  padding:8px 0px; height:24px;}
+.wigywig .eMenu:after {content:""; display:block; clear:both;}
+.wigywig .eMenu li {float:left; border:1px solid #e5e5e5; background:#fff; margin:0px 4px; border:1px solid #efefef; border-radius:4px;}
+.wigywig .eMenu li >*:first-child {border-top-left-radius:4px;border-bottom-left-radius:4px}
+.wigywig .eMenu li >*:last-child {border-top-right-radius:4px;border-bottom-right-radius:4px}
+.wigywig .eMenu li > span.space {display:block; height:22px; width:1px; background:#e5e5e5; float:left;}
+.wigywig .eMenu li > select {height:22px; display:block; float:left; border:none;}
+.wigywig .eMenu li > button > span{display:block; height:22px; width:22px; background:url(icons.png) no-repeat; cursor:pointer; }
+.wigywig .eMenu li > button {display:block; float:left; height:22px; width:22px; border:none; background-color:#fcfcfc;}
+.wigywig .eMenu li > button:hover,
+.wigywig .eMenu li > button.active {background:#e5e5e5;background:radial-gradient(ellipse at center, #fcfcfc 54%,#a5a5a5 100%);} 
+
+.wigywig .eMenu li > button[data-command="bold"] > span {background-position: 0px 0px;}
+.wigywig .eMenu li > button[data-command="italic"] > span {background-position: -20px 0px;}
+.wigywig .eMenu li > button[data-command="fontColor"] > span {background-position: -40px 0px;}
+.wigywig .eMenu li > button[data-command="backColor"] > span {background-position: -60px 0px;}
+.wigywig .eMenu li > button[data-command="subscript"] > span {background-position: -80px 0px;}
+.wigywig .eMenu li > button[data-command="superscript"] > span {background-position: -100px 0px;}
+.wigywig .eMenu li > button[data-command="underline"] > span {background-position: -120px 0px;}
+.wigywig .eMenu li > button[data-command="JustifyLeft"] > span {background-position: -140px 0px;}
+.wigywig .eMenu li > button[data-command="JustifyCenter"] > span {background-position: -160px 0px;}
+.wigywig .eMenu li > button[data-command="JustifyRight"] > span {background-position: -180px 0px;}
+.wigywig .eMenu li > button[data-command="InsertUnorderedList"] > span {background-position: -200px 0px;}
+.wigywig .eMenu li > button[data-command="insertOrderedList"] > span {background-position: -220px 0px;}
+.wigywig .eMenu li > button[data-command="insertDiv"] > span {background-position: -240px 0px;}
+.wigywig .eMenu li > button[data-command="insertTable"] > span {background-position: -260px 0px;}
+.wigywig .eMenu li > button[data-command="undo"] > span {background-position: -280px 0px;}
+.wigywig .eMenu li > button[data-command="redo"] > span {background-position: -300px 0px;}
+.wigywig .eMenu li > button[data-command="createLink"] > span {background-position: -320px 0px;}
+.wigywig .eMenu li > button[data-command="unlink"] > span {background-position: -340px 0px;}
+.wigywig .eMenu li > button[data-command="InsertImg"] > span {background-position: -360px 0px;}
+.wigywig .eMenu li > button[data-command="InsertFlash"] > span {background-position: -380px 0px;}
+.wigywig .eMenu li > button[data-command="InsertYoutube"] > span {background-position: -400px 0px;}
+
+.wigywig .EX_popup { position:absolute; background:#fff; padding:8px; border:1px solid #dedede; border-radius:4px; box-shadow:2px 2px #777}
+
+.exdialog_form li {border-bottom:1px solid #ccc; padding:4px 4px 4px 100px; position:relative}
+.exdialog_form li .lh {position:absolute; text-align:right; left:0px; top:4px; width:90px; text-align:right;}
+.exdialog_form li label > span.ui-button-text {padding:1px 10px}
+.exdialog_form > div {text-align:right; padding-top:15px;}
+
+#EXeditor_dialog_images .imgUpload {position:relative; padding:0px 104px 0px 94px; padding-bottom:10px; border-bottom:1px solid #ccc;}
+#EXeditor_dialog_images .imgUpload label {position:absolute; left:0px; top:3px;}
+#EXeditor_dialog_images .imgUpload input[type="file"] {display:block; box-sizing:border-box; width:100%; position:relative; top:2px;}
+#EXeditor_dialog_images .imgUpload .exdialog_uploadimg {position:absolute; right:0px; top:2px;padding:2px 8px; font-size:12px;}
+#EXeditor_dialog_images .imgList {height:465px;}
+#EXeditor_dialog_images .imgList.loading {background:url(ajax_loader.gif) no-repeat center center}
+#EXeditor_dialog_images .imgList ul > li {width:23%; float:left; padding-top:10px; margin:10px 1%; border:1px solid #ccc; box-sizing:border-box; text-align:center;}
+#EXeditor_dialog_images .imgList ul > li .img {background-repeat:no-repeat; background-position:center; height:160px;}
+#EXeditor_dialog_images .imgList ul > li a >span {padding: 0px 20px;}
+#EXeditor_dialog_images .imgList .exImgPage {clear:both; text-align:center;padding:10px 0px;}

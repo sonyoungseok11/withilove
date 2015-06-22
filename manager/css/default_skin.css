@@ -1,0 +1,95 @@
+/*레이아웃*/
+.mwrap {height:35px; position:relative; padding-top:8px}
+.mwrap h1 { position:absolute; left:20px; top:15px;}
+.mwrap .sitemenu {position:absolute; top:25px; right:20px;}
+.container:after {content:""; display:block; clear:both;}
+.container .lnb {width: 200px; float:left;}
+.container .contents {padding-left:210px; padding-top:20px; padding-right:10px}
+.container .contents .page_title {font-weight:bold; font-size:20px; color:#272727;; border-bottom:2px solid #4383fc; padding-bottom:6px;}
+
+.container .contents .page_title:after {content:""; display:block; clear:right;}
+.container .contents .page_title .side {float:right; font-size:12px; color:#777; font-weight:normal; margin-top:9px;}
+
+/*왼쪽 메뉴*/
+.lnb {padding-top:15px;}
+.lnb >ul > li > div {padding:4px 4px 4px 20px; font-size:14px; display:block; background:#ccc; font-weight:bold;}
+.lnb >ul > li > ul {}
+.lnb >ul > li > ul > li {border-top:1px solid #999; position:relative;}
+.lnb >ul > li > ul > li:first-child{border-top:none;}
+.lnb >ul > li > ul > li > a {padding:4px 4px 4px 30px; display:block;} 
+.lnb >ul > li > ul > li > a:hover {background:#f0f0f0;}
+.lnb >ul > li > ul > li > a.active {color:#f60; font-weight:bold;}
+.lnb >ul > li > ul > li > a.active:after {content:"▶"; position:absolute; left:16px; top:4px;}
+
+/* 주소 검색창 */
+#Search_ZipCode .tabzip {font-size:15px; padding:4px; text-align:center; width:226px}
+#Search_ZipCode .search_form {padding-right:52px; position:relative;}
+#Search_ZipCode .search_form .button {position:absolute; right:0px; top:0px;}
+#Search_ZipCode .zipinput {width:415px;}
+#Search_ZipCode .zipResult {margin-top:20px; height:190px; overflow:auto;}
+#Search_ZipCode .zipResult li {padding:4px 52px 4px 60px; position:relative; border-top:1px solid #ececec; line-height:22px;}
+#Search_ZipCode .zipResult .sZip {display:block; width:60px; position:absolute; left:0px; top:4px;}
+#Search_ZipCode .zipResult li .button {position:absolute; right:0px; top:4px;}
+
+/* 주소 검색창 */
+#Search_ZipCode_New .tabzip {font-size:15px; padding:4px; text-align:center; width:276px}
+#Search_ZipCode_New .search_form {padding-right:52px; position:relative;}
+#Search_ZipCode_New .search_form .button {position:absolute; right:0px; top:0px;}
+#Search_ZipCode_New .zipinput {width:387px;}
+#Search_ZipCode_New .zipResult {margin-top:60px; height:190px; overflow:auto; }
+#Search_ZipCode_New .zipResult.doro {margin-top:40px; height:210px;}
+#Search_ZipCode_New .zipResult li {padding:4px 52px 4px 60px; position:relative; line-height:22px;}
+#Search_ZipCode_New .zipResult li:nth-child(even) {background:#ececec;}
+#Search_ZipCode_New .zipResult .sZip {display:block; width:60px; position:absolute; left:0px; top:4px; height:44px; line-height:44px;}
+#Search_ZipCode_New .zipResult .sZibun {color:#999;}
+#Search_ZipCode_New .zipResult .sDoro {color:#4383fc;}
+#Search_ZipCode_New .zipResult li .button {position:absolute; right:3px; top:15px;}
+
+
+/* 회원 등록/수정 팝업 */
+#UserModify li {padding:4px 0px 4px 110px; position:relative; border-top:1px solid #f0f0f0;}
+#UserModify .user_form {padding:20px 0px;}
+#UserModify li:first-child {border-top:none;}
+#UserModify li .lh {width:100px; display:block; position:absolute; left:0px; text-align:right; font-weight:bold;}
+#UserModify li .block {margin:4px 0px;}
+#UserModify .ajax_loader {height:422px; background:url(../../images/ajax-loader.gif) center center no-repeat;}
+
+.dialog_form li {padding:4px 0px 4px 110px; position:relative; border-top:1px solid #f0f0f0;}
+.dialog_form li:first-child {border-top:none;}
+.dialog_form li .lh {width:100px; display:block; position:absolute; left:0px; text-align:right; font-weight:bold;}
+.dialog_form li .block {margin:4px 0px;}
+.dialog_form .ajax_loader {background:url(../../images/ajax-loader.gif) center center no-repeat;}
+.dialog_form li .box {box-sizing:border-box}
+.dialog_form li input.inline {width:200px;}
+.dialog_form +.Btns {border-top:2px solid #eeeeee; margin:15px 0px; padding:15px 0px; text-align:center }
+
+.dialog_form2 ul:after {content:""; display:block; clear:both;}
+.dialog_form2 li {padding:4px 0px 4px 110px; position:relative; border-top:1px solid #f0f0f0; width:50%; box-sizing:border-box; float:left;}
+.dialog_form2 li.block {width:100%;}
+.dialog_form2 li .lh {width:100px; display:block; position:absolute; left:0px; text-align:right; font-weight:bold;}
+.dialog_form2 li .block {margin:4px 0px;}
+.dialog_form2 .ajax_loader {background:url(../../images/ajax-loader.gif) center center no-repeat;}
+.dialog_form2 li textarea {width:100%; box-sizing:border-box;}
+
+/* 패밀리학원관리 */
+.line_update {padding:4px; background:#f0f0f0; position:relative; height:23px; margin:10px 0px 20px;}
+.line_update:after {content:""; display:block; clear:both;}
+.line_update > div {float:left; line-height:22px; padding:0px 4px;}
+.line_update .title {font-size:14px; font-weight:bold; color:#FFFFFF; background:#272727; padding:0px 4px;}
+.line_update label {margin-left:10px;}
+.academy_list li {padding:6px}
+.academy_list .ui-icon {display:inline-block; position:relative; top:3px;}
+.academy_list li.disable {background:#ccc;}
+.academy_list label, .academy_list a {margin-left:5px;}
+
+/*비회원 행사신청 디알로그*/
+.edu_ask .title {font-weight:bold; line-height:40px;}
+
+#Search_Mebmber .search_result {height:200px; overflow:auto;}
+.search_result .item {border-top:1px solid #f0f0f0; padding:6px; box-sizing:border-box; position:relative;}
+.search_result .item:hover {background:#f0f0f0;}
+.search_result .item >span {display:block; position:absolute; top:6px; text-align:center;}
+.search_result .item .id {width:30%; position:relative; top:0px; text-align:left;}
+.search_result .item .name {width:20%; left:30%;}
+.search_result .item .tel {width:36%; left:46%; text-align:right;}
+.search_result .item .cmd {width:14%; right:6px;}

@@ -1,0 +1,253 @@
+/* common css */
+
+@charset "utf-8"; 
+@import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+html,body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0px;padding:0px}
+body,input,textarea,select,button,table{font-family:'Nanum Gothic',Dotum,AppleGothic,sans- serif;font-size:12px} 
+img,fieldset{border:none;}
+ul,ol{list-style:none; margin:0px; padding:0px;} 
+em,address{font-style:normal} 
+a{text-decoration:none; color:#272727} 
+a:hover,a:active,a:focus{text-decoration:none; color:#4383fc}
+.blind{visibility:hidden;overflow:hidden;position:absolute;top:0;left:0;width:1px;height:1px;font-size:0;line-height:0;}
+html, body {height:100%}
+label {cursor:pointer;}
+
+/* cssReset */
+.cssReset {font-size:14px;}
+.cssReset ul {list-style: disc; padding-left:40px;}
+.cssReset ol {list-style: decimal; padding-left:40px;}
+.cssReset p {margin:1em 0em;}
+.cssReset h1 {margin:0.67em 0em;}
+.cssReset h2 {margin:0.83em 0em;}
+.cssReset h3 {margin:1em 0em;}
+.cssReset h4 {margin:1.33em 0em;}
+.cssReset h5 {margin:1.67em 0em;}
+.cssReset h6 {margin:2.33em 0em;}
+.cssReset dl {margin:1em 0em;}
+.cssReset dd {margin-left:40px;}
+.cssReset fieldset {margin:2px 0px; padding:0.35em 0.75em 0.625em; border: 2px groove threedface;}
+.cssReset legend {padding:0px 2px;}
+
+/* Button Common */
+.button,
+.button *{ position:relative; margin:0; padding:0; display:-moz-inline-stack; display:inline-block; text-decoration:none !important; border:0; font-size:12px; font-family:Tahoma, Sans-serif; white-space:nowrap; background:url(../images/button.gif) no-repeat; vertical-align:top; overflow:visible; color:#333;}
+.button { margin-right:4px;}
+.button *{ left:4px; cursor:pointer; _cursor:hand;}
+
+/* Button Size = medium | large | xLarge | small */
+.button.medium, .button.medium *{ height:24px; line-height:24px;}
+.button.large, .button.large *{ height:30px; line-height:30px;}
+.button.xLarge, .button.xLarge *{ height:36px; line-height:36px;}
+.button.small, .button.small *{ height:19px; line-height:19px;}
+.button.medium { background-position:left 0;}
+.button.large { background-position:left -30px;}
+.button.xLarge { background-position:left -65px;}
+.button.small { background-position:left -106px;}
+.button.medium *{ padding:0 10px 0 6px; font-size:12px; background-position:right top;}
+.button.large *{ padding:0 10px 0 6px; font-size:16px; background-position:right -30px;}
+.button.xLarge *{ padding:0 10px 0 6px; font-size:20px; background-position:right -65px;}
+.button.small *{ padding:0 6px 0 2px; font-size:11px; background-position:right -106px;}
+
+/* Button Hover */
+.button *:hover,
+.button *:active,
+.button *:focus{ color:#61abdf; text-decoration:none !important;}
+
+/* Button Strong */
+.button.strong *{ font-weight:bold !important;}
+
+/* Button Icon Variation */
+.button.icon *{ padding-left:20px;}
+.button.small.icon *{ padding-left:16px;}
+.button.icon span{ width:20px; margin-right:-20px; padding:0 !important;}
+.button.medium .check{ background-position:4px -150px;}
+.button.large .check{ background-position:4px -146px;}
+.button.xLarge .check{ background-position:5px -144px;}
+.button.small .check{ background-position:3px -153px;}
+.button.medium .add{ background-position:-16px -150px;}
+.button.large .add{ background-position:-14px -146px;}
+.button.xLarge .add{ background-position:-14px -144px;}
+.button.small .add{ background-position:-18px -153px;}
+.button.medium .delete{ background-position:-34px -150px;}
+.button.large .delete{ background-position:-34px -146px;}
+.button.xLarge .delete{ background-position:-34px -144px;}
+.button.small .delete{ background-position:-37px -153px;}
+.button.medium .calendar{ background-position:-56px -150px;}
+.button.large .calendar{ background-position:-56px -146px;}
+.button.xLarge .calendar{ background-position:-56px -144px;}
+.button.small .calendar{ background-position:-59px -153px;}
+.button.medium .refresh{ background-position:-76px -150px;}
+.button.large .refresh{ background-position:-76px -146px;}
+.button.xLarge .refresh{ background-position:-76px -144px;}
+.button.small .refresh{ background-position:-79px -153px;}
+.button span.btn_icon {margin-right:-25px;}
+
+/* 배경이미지 */
+
+.wrap {z-index:999; position:relative; width:980px;}
+
+/* table Common */
+.table{margin:0}
+.table table{border:0;border-collapse:collapse;border-top:2px solid #ccc}
+.table caption{padding:8px 0;font-weight:bold;text-align:left;line-height:32px; font-size:16px;}
+.table caption:after{content:"";display:block;clear:both}
+.table caption a{font-weight:normal}
+.table caption em{float:right;font-style:normal;font-weight:normal;color:#e00;margin-left:1em}
+.table caption strong{color:#e00}
+.table caption .side{float:right;font-weight:normal;margin-left:1em}
+.table th,.table td{border:0;padding:8px;vertical-align:top;text-align:left;border-bottom:1px solid #ddd;white-space:nowrap}
+.table th{background:url(../images/bg_black10.png)}
+.table thead th{border-bottom:1px solid #999; text-align:center;}
+.table tfoot td{font-weight:bold;background:#f8f8f8}
+.table.even tbody tr:nth-of-type(even) td{background-color:#fafafa}
+.table input[type=text]{margin:-1px 0 -3px 0;vertical-align:middle}
+.table img{vertical-align:middle}
+.table .title,.table .text{white-space:normal}
+.table .h1 + table,.table .h2 + table,.table .h3 + table,.table .h4 + table,.h1 + .table table,.h2 + .table table,.h3 + .table table,.h4 + .table table{border-top:0}
+.table .left {text-align:left}
+.table .center {text-align:center}
+
+/* 페이징 common */
+.pageing {text-align:center; margin-top:20px;}
+.pageing a{padding:2px 5px; display:inline-block; background:url(../images/bg_black10.png); color:#333;}
+.pageing a:hover, .pageing a:focus, .pageing a.select {background:#f90; text-decoration:none;}
+
+/* Tab + List */
+.tab.list{height:160px;margin:0}
+.tab.list  ul{position:relative;margin:0;padding:0;list-style:none;zoom:1}
+.tab.list ul:after{content:"";display:block;clear:both}
+.tab.list > li{float:left;margin-bottom:-1px}
+.tab.list li > a{position:relative;float:left;text-decoration:none;border:1px solid #e7e7e7;background:#fafafa;color:#666}
+.tab.list li > a span{display:inline-block;padding:6px 25px 6px 25px;letter-spacing:-1px;cursor:pointer}
+.tab.list li > ul{width:100%;position:absolute;top:30px;left:0;list-style:none;border:0;margin:0;padding:0;zoom:1}
+.tab.list li > ul:after{content:"";display:block;clear:both}
+.tab.list li > ul > li{float:none;position:relative;padding: 5px 0; 0;color:#999; border-top:1px solid #e7e7e7;}
+.tab.list li > ul > li:first-child {border-top:none;}
+.tab.list li > ul > li > a{float:none;padding:0;margin:0;border:0 !important;color:#666 !important;font-weight:normal;background:transparent;letter-spacing:normal}
+.tab.list li > ul > li a:hover,
+.tab.list li > ul > li a:active,
+.tab.list li > ul > li a:focus{text-decoration:none; color:#0082f0 !important}
+.tab.list li > ul > li .side{position:absolute;top:0;right:0;color:#767676; top:5px; color:#0082f0}
+.tab.list li > ul > li.more{position:absolute;top:-30px;right:0;border:0 !important;background:transparent}
+.tab.list li.active > a{border:1px solid #ccc;border-bottom:1px solid #dedede;margin-top:-1px;background:transparent;color:#333}
+.tab.list li.active > a span{padding-top:7px;font-weight:bold}
+.tab.list.jx{height:auto}
+.tab.list.jx ul{border:0}
+.tab.list.jx li{float:none;position:relative}
+.tab.list.jx li > a{float:none;display:block;font-weight:bold;color:#333;border:1px solid #eee !important;border-bottom-color:#ccc !important;background:#fafafa !important}
+.tab.list.jx li > ul{position:static;display:block !important;left:0;top:0;padding:5px 0}
+.tab.list.jx li > ul > li > a{display:inline;border:0 !important;background:none !important;font-weight:normal;}
+.tab.list.jx li > ul > li.more{top:7px;right:15px; font-weight:bold;}
+.tab.list li > ul > li.more>a:focus, .tab.list li li.more>a:hover {text-decoration:none; color:#000 !important; }
+.tab.list li > ul > li.more span {color:#0082f0; font-weight:normal; display:inline; padding:0px; letter-spacing:normal;}
+.tab.list li.active > a{border:1px solid #ccc;border-bottom:1px solid #0082f0;margin-top:-1px;background:#0082f0;color:#FFF}
+
+/* bubble*/
+.bubble{position:absolute;color:#ffffff;background-color:#66aa11;border-radius:5px;padding:3px; min-width:100px;}
+.bubble:after{content:"";left:15px; margin-left:8px;border-right :8px solid transparent;border-bottom:8px solid  #66aa11;border-left : 8px solid transparent;position:absolute;top:-8px;width:0; height:0;}
+.bubble_err{position:absolute;color:#ffffff;background-color:#F63;border-radius:5px;padding:3px; min-width:100px;}
+.bubble_err:after{content:"";left:15px; margin-left:8px;border-right :8px solid transparent;border-bottom:8px solid  #F63;border-left : 8px solid transparent;position:absolute;top:-8px;width:0; height:0;}
+.bubble_jiterr{position:absolute;color:#ffffff;background-color:#F63;border-radius:5px;padding:3px; min-width:100px;}
+.bubble_jiterr:after{content:"";left:15px; margin-left:8px;border-right :8px solid transparent;border-top:8px solid  #F63;border-left : 8px solid transparent;position:absolute;bottom:-8px;width:0; height:0;}
+.bubble_jitok{position:absolute;color:#ffffff;background-color:#09C;border-radius:5px;padding:3px; min-width:100px;}
+.bubble_jitok:after{content:"";left:15px; margin-left:8px;border-right :8px solid transparent;border-top:8px solid  #09C;border-left : 8px solid transparent;position:absolute;bottom:-8px;width:0; height:0;}
+
+.bubble.gray {background-color:#f0f0f0; color:#272727}
+.bubble.gray:after {border-bottom:8px solid  #f0f0f0}
+
+/*dialog form*/
+.dialog_form > li {position:relative; padding:8px 8px 8px 110px; border-top:1px solid #a9a9a9;}
+.dialog_form > li:first-child{border-top:none;}
+.dialog_form > li > label {width:100px; position:absolute; left:0px; padding:3px 0}
+.dialog_form > li > input[type='text'], .dialog_form > li > input[type='password'] {width:100%; border-radius:3px; padding:2px 3px; border:1px solid #a9a9a9}
+
+/* msButton */
+.msButton {border:none; background:#fc4359; padding:16px; width:100px; text-align:center; color:#FFFFFF; display:inline-block; box-sizing:border-box; cursor:pointer; font-size:15px; font-weight:bold;}
+.msButton.gray {background-color:#c5c5c5;}
+.msButton.blue {background-color:#4383fc;}
+.msButton:hover,.msButton:focus {text-decoration:none; color:yellow;}
+.msButton.verysmall {font-size:11px; padding:2px 4px; width:auto;}
+.msButton.small {font-size:11px; padding:4px 6px; width:auto;}
+.fileinsert {display:block; position:absolute; bottom:9px; left:530px;}
+.msButton.medium {font-size:14px; padding:6px}
+
+
+/*--------------------------------------------------*/
+
+#with_wrap{
+	width:100%;
+	position:relative;
+	text-align:center;
+	}
+
+
+/*---폰트 관련-------------------*/
+
+/*사이즈*/
+.fs15{ font-size:15px;}
+
+/*색*/
+.blue{color:#4383fc;}
+.black{color:#000;}
+
+
+
+/**/
+
+
+
+#with_cont{
+	display:inline;
+	position:relative;
+	text-align:center;
+	width:1000px;
+	}
+
+#cont_box{
+	display:inline;
+	position:relative;
+	text-align:center;
+	}
+
+
+
+
+#stit{
+	font-size:15pt;
+	font-weight:bold;
+	padding:0 0 0 80px;
+	}
+
+
+#tax_person {
+	margin:;
+	overflow: hidden;
+		}
+#tax_person ul {
+	overflow: hidden;
+}
+#tax_person li {
+	float:left;
+	width:500px;
+	height:auto;
+	position:relative;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

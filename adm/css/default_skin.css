@@ -1,0 +1,67 @@
+/* CSS Document */
+.ADM_wrap {height:40px;}
+.ADM_wrap > h1 {line-height:40px;}
+.ADM_gnb {background:#d9d9d9; padding:5px 20px;}
+.ADM_gnb:after {content:""; clear:both; display:block;}
+.ADM_gnb>li {float:left;}
+.ADM_gnb>li.side {float:right;}
+.ADM_gnb>li>a {display:block; padding:5px 10px;}
+#Add_Master .dialog_form {padding:20px 0;}
+
+.ADM_Container {min-width:1000px; padding:10px;}
+.nodata {height:200px; line-height:200px; text-align:center; }
+.ADM_Container .board_list{margin:10px 0px}
+
+.ADM_Container .subject {margin-bottom:10px;}
+.ADM_Container * {box-sizing:border-box}
+.ADM_Container .inputs {border:1px solid #ccc; padding:8px}
+.ADM_Container .inputs > li {border-top:1px solid #ccc; padding:5px 5px 5px 168px; height:35px; position:relative;}
+.ADM_Container .inputs > li:first-child{border-top:none;}
+.ADM_Container .inputs > li > label {width:160px; height:35px; padding:8px; background:#fafafa; font-weight:bold; font-size:14px; position:absolute; left:0px; top:0px; display:block;}
+.ADM_Container .inputs > li > select {min-width:50px;}
+.ADM_Container .inputs+.center {margin-top:10px; text-align:center;}
+
+/* 메뉴 index.php*/
+.menuADM > div > h3 {padding:15px 20px; position:relative;}
+.menuADM > div > h3 > div {display:inline-block; margin-left:30px;}
+.menuADM .new {background:#eeeeee; margin:5px 0px 10px}
+.menuADM .new .title {background: #666; display:inline-block; font-size:15px; width:100px; text-align:center; color:#fff; font-weight:bold; margin-right:12px;}
+.menuADM .new label {margin-right:5px;}
+.menuADM .new, .menuADM .sortable > li {padding:5px; line-height:22px;}
+.sortable > li input.right {text-align:right}
+.sortable > li input.center {text-align:center}
+.new select, .sortable > li select {height:22px; margin-right:5px;}
+.sortable .button {margin-right:8px;}
+.menuADM .new input[type="text"], .sortable > li input[type="text"] {padding:2px 5px;}
+.sortable > li label {margin-right:5px;}
+.sortable .disable{background:#ccc;}
+.sortable .select{background:#FC6;}
+.sortable .ui-icon {display:inline-block; top:4px; position:relative; margin-right:0px;}
+
+/* 환경설정 */
+.home_config {padding:15px;}
+.home_config h3 {font-size:16px; margin-bottom:20px;}
+.home_config li {border-top:1px solid #ccc; padding:10px;}
+.home_config li label {font-size:14px; font-weight:bold;}
+.home_config li label + span {color:#f60; font-weight:normal; font-size:11px; cursor:text;}
+.home_config li input[type="text"], .home_config li textarea {display:block; width:100%; padding:10px; box-sizing:border-box; margin-top:8px;}
+.home_config li textarea {height:150px;}
+.home_config ul + div {text-align:center; padding:15px;}
+
+/* 주소 검색창 */
+#Search_ZipCode .tabzip {font-size:15px; padding:4px; text-align:center; width:226px}
+#Search_ZipCode .search_form {padding-right:52px; position:relative;}
+#Search_ZipCode .search_form .button {position:absolute; right:0px; top:0px;}
+#Search_ZipCode .zipinput {width:415px;}
+#Search_ZipCode .zipResult {margin-top:20px; height:190px; overflow:auto;}
+#Search_ZipCode .zipResult li {padding:4px 52px 4px 60px; position:relative; border-top:1px solid #ececec; line-height:22px;}
+#Search_ZipCode .zipResult .sZip {display:block; width:60px; position:absolute; left:0px; top:4px;}
+#Search_ZipCode .zipResult li .button {position:absolute; right:0px; top:4px;}
+
+/* 회원 등록/수정 팝업 */
+#UserModify li {padding:4px 0px 4px 110px; position:relative; border-top:1px solid #f0f0f0;}
+#UserModify .user_form {padding:20px 0px;}
+#UserModify li:first-child {border-top:none;}
+#UserModify li .lh {width:100px; display:block; position:absolute; left:0px; text-align:right;}
+#UserModify li .block {margin:4px 0px;}
+#UserModify .ajax_loader {height:422px; background:url(../../images/ajax-loader.gif) center center no-repeat;}
